@@ -55,19 +55,20 @@ class BotController extends Controller
                                     $bidPrice = ceil(($project->budget->maximum + $project->budget->minimum) / 2);
                                     // save project
                                     $newProject = Project::create([
-                                        'projectid' => $project->id,
-                                        'userid' => $project->owner_id,
-                                        'seo_url' => $project->seo_url,
-                                        'name' => $project->title,
-                                        'employer_reputation' => $users->$ownerId->employer_reputation->entire_history->overall,
-                                        'country' => $project->currency->country,
-                                        'currency' => $project->currency->code,
-                                        'min_price' => $project->budget->minimum,
-                                        'avg_price' => $project->bid_stats->bid_avg,
-                                        'bid_count' => $project->bid_stats->bid_count,
-                                        'bid_price' => $bidPrice,
-                                        'pub_time' => $project->time_updated,
+                                        'projectid' => (string) $project->id, // Cast to string
+                                        'userid' => (string) $project->owner_id, // Cast to string
+                                        'seo_url' => (string) $project->seo_url, // Cast to string
+                                        'name' => (string) $project->title, // Cast to string
+                                        'employer_reputation' => (string) $users->$ownerId->employer_reputation->entire_history->overall, // Cast to string
+                                        'country' => (string) $project->currency->country, // Cast to string
+                                        'currency' => (string) $project->currency->code, // Cast to string
+                                        'min_price' => (string) $project->budget->minimum, // Cast to string
+                                        'avg_price' => (string) $project->bid_stats->bid_avg, // Cast to string
+                                        'bid_count' => (string) $project->bid_stats->bid_count, // Cast to string
+                                        'bid_price' => (string) $bidPrice, // Cast to string
+                                        'pub_time' => (string) $project->time_updated, // Cast to string
                                     ]);
+
                                     // Define the URL and the access token
                                     $url = 'https://www.freelancer.com/api/projects/0.1/bids/?compact=';
     
