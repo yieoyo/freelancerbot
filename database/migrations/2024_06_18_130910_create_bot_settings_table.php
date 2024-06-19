@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('fluser_token');
             $table->string('page_limit');
             $table->string('min_price');
-            $table->string('buyer_repuration');
+            $table->string('buyer_reputation');
             $table->string('bid_period');
             $table->longText('bid_proposal');
             $table->longText('skip_project');

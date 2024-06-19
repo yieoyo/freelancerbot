@@ -15,7 +15,7 @@ class BotSetting extends Model
         'fluser_token',
         'page_limit',
         'min_price',
-        'buyer_repuration',
+        'buyer_reputation',
         'bid_period',
         'bid_proposal',
         'skip_project',

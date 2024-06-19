@@ -28,7 +28,13 @@ class ProjectController extends Controller
             abort(403, 'You are not authorized');
         }
         return view('project.index', [
-            'projects' => Project::all(),
+            'projects' => Project::orderBy('created_at', 'desc')->get(),
         ]);
+    }
+
+    public function truncate()
+    {
+        Project::truncate();
+        return redirect()->route('project.index')->with('success', 'All projects have been deleted.');
     }
 }

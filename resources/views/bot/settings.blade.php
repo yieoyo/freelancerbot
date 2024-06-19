@@ -16,7 +16,7 @@
                     <p><strong>FL User Token:</strong> {{ $setting->fluser_token }}</p>
                     <p><strong>Page Limit:</strong> {{ $setting->page_limit }}</p>
                     <p><strong>Min Price:</strong> {{ $setting->min_price }}</p>
-                    <p><strong>Buyer Reputation:</strong> {{ $setting->buyer_repuration }}</p>
+                    <p><strong>Buyer Reputation:</strong> {{ $setting->buyer_reputation }}</p>
                     <p><strong>Bid Period:</strong> {{ $setting->bid_period }}</p>
                     <p><strong>Bid Proposal:</strong> {{ $setting->bid_proposal }}</p>
                     <p><strong>Skip Project:</strong> {{ $setting->skip_project }}</p>

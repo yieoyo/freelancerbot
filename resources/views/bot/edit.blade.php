@@ -34,8 +34,8 @@
                         </div>
                         
                         <div class="mb-3">
-                            <label for="buyer_repuration" class="form-label">Buyer Reputation</label>
-                            <input type="text" class="form-control" id="buyer_repuration" name="buyer_repuration" value="{{ $setting->buyer_repuration }}" required>
+                            <label for="buyer_reputation" class="form-label">Buyer Reputation</label>
+                            <input type="text" class="form-control" id="buyer_reputation" name="buyer_reputation" value="{{ $setting->buyer_reputation }}" required>
                         </div>
                         
                         <div class="mb-3">

@@ -25,5 +25,5 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/settings/edit', [App\Http\Controllers\BotController::class, 'editSetting'])->name('bot.edit');
     Route::put('/settings/update', [App\Http\Controllers\BotController::class, 'updateSetting'])->name('bot.update');
     Route::get('/projects', [App\Http\Controllers\ProjectController::class, 'index'])->name('project.index');
-    Route::get('/projects/delete', [App\Http\Controllers\ProjectController::class, 'index'])->name('project.delete');
+    Route::delete('/projects/truncate', [App\Http\Controllers\ProjectController::class, 'truncate'])->name('project.truncate');
 });

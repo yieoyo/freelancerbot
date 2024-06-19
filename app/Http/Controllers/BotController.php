@@ -41,15 +41,13 @@ class BotController extends Controller
             // Extract relevant information
             $projects = $data->result->projects;
             $users = $data->result->users;
-    
             // Iterate through projects and check user reviews
             foreach ($projects as $project) {
                 $ownerId = $project->owner_id;
-                
                 // Check if title contains skipping words
                 if($this->shouldNotSkipProject($project->title, $botSetting->skip_project)){
                     // Check if user exists and has more than 1 review
-                    if (isset($users->$ownerId) && $users->$ownerId->employer_reputation->entire_history->overall >= $botSetting->buyer_repuration) {
+                    if (isset($users->$ownerId) && $users->$ownerId->employer_reputation->entire_history->overall >= $botSetting->buyer_reputation) {
                         if (in_array(strtolower($project->currency->country), $countries)) {
                             if ($project->budget->minimum >= $botSetting->min_price) {
                                 $saveProject = Project::where('projectid', $project->id)->first();
@@ -70,7 +68,6 @@ class BotController extends Controller
                                         'bid_price' => $bidPrice,
                                         'pub_time' => $project->time_updated,
                                     ]);
-    
                                     // Define the URL and the access token
                                     $url = 'https://www.freelancer.com/api/projects/0.1/bids/?compact=';
     
@@ -111,7 +108,7 @@ class BotController extends Controller
                                         ]);
                                         dump("Bid placed!");
                                     } else {
-                                        dump('Failed');
+                                        dump($responseData->message);
                                     }
                                 }
                             }else {
@@ -131,7 +128,7 @@ class BotController extends Controller
             }
             dd('Successfull');
         }
-        dd('Bot is inactive');
+        dd('Bot is sleeping');
 
     }
 
