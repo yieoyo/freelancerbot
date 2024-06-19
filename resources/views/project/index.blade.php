@@ -34,15 +34,14 @@
                             <tbody>
                                 @foreach($projects as $project)
                                 @php
-                                    $readableTime = \Carbon\Carbon::createFromTimestamp($project->pub_time)->format('d M Y, h:i A');
-                                    $bidTime = \Carbon\Carbon::createFromTimestamp($project->created_at)->format('d M Y, h:i A');
+                                $readableTime = \Carbon\Carbon::createFromTimestamp($project->pub_time)->format('d M Y, h:i A');
                                 @endphp
                                 <tr>
                                     <td><a href="http://www.freelancer.com.bd/projects/{{$project->seo_url}}" target="_blank" rel="noopener noreferrer">{{ $project->name }}</a></td>
                                     {{-- <td>{{ $project->projectid }}</td> --}}
                                     <td>{{ number_format($project->employer_reputation, 1) }}</td>
                                     <td>{{ $readableTime }}</td>
-                                    <td>{{ $bidTime }}</td>
+                                    <td>{{ $project->created_at->format('d M Y, h:i A') }}</td>
                                     <td>{{ $project->country }}</td>
                                     <td>{{ $project->currency }}</td>
                                     <td>{{ $project->min_price }}</td>
@@ -50,7 +49,12 @@
                                     <td>{{ $project->bid_count }}</td>
                                     <td>{{ $project->bid_price }}</td>
                                     <td>{{ $project->period }}</td>
-                                    <td>{{ $project->status == 1 ? 'Success' : 'Failied'}}</td>
+                                    <td>
+                                        <span class="badge {{ $project->status == 1 ? 'bg-success' : 'bg-danger' }}">
+                                            {{ $project->status == 1 ? 'Success' : 'Failed' }}
+                                        </span>
+                                    </td>
+
                                 </tr>
                                 @endforeach
                             </tbody>
