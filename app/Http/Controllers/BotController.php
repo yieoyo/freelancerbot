@@ -13,14 +13,14 @@ class BotController extends Controller
     public function startBot()
     {
         $botSetting = BotSetting::findOrFail(1);
-        $countries = $countries = array("as", "tz", "zm", "ba", "gy", "ly", "um", "uy", "sy", "ye", "mx", "no", "rw", "tw", "zw", "vg", "ve", "vi", "vn", "it", "mz", "iq", "md", "pw", "np", "pa", "pg", "pr", "sg", "py", "my", "mv", "mk", "do", "is", "sv", "lk", "kg", "tr", "kw", "xk", "tj", "uz", "ke", "jo", "jm", "kz", "ht", "hn", "xc", "ph", "hu", "hk", "lu", "gl", "gd", "gi", "gh", "gm", "ge", "fk", "fj", "fi", "gf", "tf", "pf", "ir", "za", "et", "ee", "ag", "cu", "cz", "ec", "cr", "co", "cl", "cv", "cm", "ca", "kh", "bi", "bo", "bs", "bg", "az", "am", "ai", "at", "bh", "ao", "dz", "al", "cy", "by", "si", "sk", "ar", "br", "pe", "lt", "lv", "es", "pt", "hr", "nl", "be", "eg", "qa", "ae", "sa", "pl", "dk", "ie", "fr", "ro", "ch", "se", "gb", "de", "au", "nz", "us", "gr");
+        $countries = explode(',', $botSetting->allow_country);
         $findUrl = 'https://www.freelancer.com/api/projects/0.1/projects/active/?compact=true&job_details=true&user_details=true&user_status=true&user_reputation=true&user_reputation_extra=true&user_employer_reputation=true&user_employer_reputation_extra=true' . $this->generateUriProp($botSetting->allow_skill, 'jobs') . $this->generateUriProp($botSetting->allow_country, 'countries'). '&limit=' . $botSetting->page_limit . '&min_price=' . $botSetting->min_price . '&project_types[]=fixed';
         $curl = curl_init();
         if($botSetting->status == 1){
             curl_setopt_array(
                 $curl,
                 array(
-                    CURLOPT_URL => 'https://www.freelancer.com/api/projects/0.1/projects/active/?compact=true&job_details=true&user_details=true&user_status=true&user_reputation=true&user_reputation_extra=true&user_employer_reputation=true&user_employer_reputation_extra=true' . $this->generateUriProp($botSetting->allow_skill, 'jobs') . $this->generateUriProp($botSetting->allow_country, 'countries'). '&limit=' . $botSetting->page_limit . '&min_price=' . $botSetting->min_price . '&project_types[]=fixed',
+                    CURLOPT_URL => $findUrl,
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => '',
                     CURLOPT_MAXREDIRS => 10,
@@ -35,7 +35,6 @@ class BotController extends Controller
             );
     
             $response = curl_exec($curl);
-    
             curl_close($curl);
             $data = json_decode($response);
             // Extract relevant information
@@ -63,8 +62,8 @@ class BotController extends Controller
                                         'country' => (string) $project->currency->country, // Cast to string
                                         'currency' => (string) $project->currency->code, // Cast to string
                                         'min_price' => (string) $project->budget->minimum, // Cast to string
-                                        'avg_price' => (string) $project->bid_stats->bid_avg, // Cast to string
-                                        'bid_count' => (string) $project->bid_stats->bid_count, // Cast to string
+                                        'avg_price' => (string) $project->bid_stats->bid_avg ? $project->bid_stats->bid_avg : 0, // Cast to string
+                                        'bid_count' => (string) $project->bid_stats->bid_count ? $project->bid_stats->bid_count : 0, // Cast to string
                                         'bid_price' => (string) $bidPrice, // Cast to string
                                         'pub_time' => (string) $project->time_updated, // Cast to string
                                     ]);
@@ -108,21 +107,22 @@ class BotController extends Controller
                                             'status' => true,
                                         ]);
                                         dump("Bid placed!");
+                                        // sleep(3);
                                     } else {
                                         dump($responseData->message);
                                     }
                                 }
                             }else {
-                                dump('oop! Project budget is lower!');
+                                dump((string) $project->budget->maximum . ' - oop! Project budget is lower!');
                             }
         
                         }else {
-                                dump('oop! Country does not matched!');
+                                dump((string) $project->currency->country . ' - oop! Country does not matched!');
                             }
                     }else {
-                        dump('oop! Reputation did not matched');
+                        dump((string) $users->$ownerId->employer_reputation->entire_history->overall . ' - oop! Reputation did not matched');
                     }
-                    
+
                 }else {
                     dump('Not our chew!');
                 }
@@ -173,6 +173,7 @@ class BotController extends Controller
         $data = '';
         foreach ($dumCountries as $key => $value) {
             $data = trim($data) . '&' . trim($name) . '[]=' . trim($value);
+            $data = trim($data);
         }
         return trim($data);
     }
