@@ -44,7 +44,7 @@ class BotController extends Controller
             foreach ($projects as $project) {
                 $ownerId = $project->owner_id;
                 // Check if title contains skipping words
-                if($this->shouldNotSkipProject($project->title, $botSetting->skip_project)){
+                if($this->shouldNotSkipProject($project->title, $botSetting->skip_project) && $this->shouldNotSkipProject($project->description, $botSetting->skip_project)){
                     // Check if user exists and has more than 1 review
                     if (isset($users->$ownerId) && $users->$ownerId->employer_reputation->entire_history->overall >= $botSetting->buyer_reputation) {
                         if (in_array(strtolower($project->currency->country), $countries)) {
