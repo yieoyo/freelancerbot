@@ -44,7 +44,7 @@ class BotController extends Controller
             foreach ($projects as $project) {
                 $ownerId = $project->owner_id;
                 // Check if title contains skipping words
-                if($this->shouldNotSkipProject($project->title, $botSetting->skip_project) && $this->shouldNotSkipProject($project->description, $botSetting->skip_project)){
+                if($this->shouldNotSkipProject($project->title, $botSetting->skip_project) && $this->shouldNotSkipProject($project->preview_description, $botSetting->skip_project)){
                     // Check if user exists and has more than 1 review
                     if (isset($users->$ownerId) && $users->$ownerId->employer_reputation->entire_history->overall >= $botSetting->buyer_reputation) {
                         if (in_array(strtolower($project->currency->country), $countries)) {
@@ -106,25 +106,25 @@ class BotController extends Controller
                                             'request_id' => $responseData->request_id,
                                             'status' => true,
                                         ]);
-                                        dump("Bid placed!");
-                                        // sleep(3);
+                                        dump('Bid placed! https://www.freelancer.com/projects/'. $project->seo_url);
+                                        sleep(1);
                                     } else {
                                         dump($responseData->message);
                                     }
                                 }
                             }else {
-                                dump((string) $project->budget->maximum . ' - oop! Project budget is lower!');
+                                dump((string) $project->budget->minimum . ' - oop! Project budget is lower! https://www.freelancer.com/projects/'. $project->seo_url);
                             }
         
                         }else {
-                                dump((string) $project->currency->country . ' - oop! Country does not matched!');
+                                dump((string) $project->currency->country . ' - oop! Country does not matched! https://www.freelancer.com/projects/'. $project->seo_url);
                             }
                     }else {
-                        dump((string) $users->$ownerId->employer_reputation->entire_history->overall . ' - oop! Reputation did not matched');
+                        dump((string) $users->$ownerId->employer_reputation->entire_history->overall . ' - oop! Reputation did not matched! https://www.freelancer.com/projects/'. $project->seo_url);
                     }
 
                 }else {
-                    dump('Not our chew!');
+                    dump('Not our chew! https://www.freelancer.com/projects/'. $project->seo_url);
                 }
             }
             dd('Successfull');
@@ -173,7 +173,6 @@ class BotController extends Controller
         $data = '';
         foreach ($dumCountries as $key => $value) {
             $data = trim($data) . '&' . trim($name) . '[]=' . trim($value);
-            $data = trim($data);
         }
         return trim($data);
     }
